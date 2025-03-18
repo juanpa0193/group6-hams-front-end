@@ -1,0 +1,253 @@
+<!-- appointment-scheduling.component.html -->
+<div class="bg-white rounded-lg p-6 shadow-lg">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-xl font-bold text-blue-800">Schedule an Appointment</h2>
+    <button (click)="goBack()" class="text-gray-500 hover:text-gray-700">
+      <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+    </button>
+  </div>
+
+  <!-- Appointment Form -->
+  <form [formGroup]="appointmentForm" (ngSubmit)="submitAppointment()" class="space-y-6">
+    <!-- Step Indicator -->
+    <div class="flex mb-8">
+      <div
+        *ngFor="let step of steps; let i = index"
+        class="flex-1 text-center"
+        [ngClass]="{'text-blue-600 font-bold': currentStep === i, 'text-gray-400': currentStep !== i}"
+      >
+        <div class="flex flex-col items-center">
+          <div
+            class="w-8 h-8 rounded-full flex items-center justify-center mb-2"
+            [ngClass]="{'bg-blue-600 text-white': currentStep >= i, 'bg-gray-200 text-gray-400': currentStep < i}"
+          >
+            {{ i + 1 }}
+          </div>
+          <span>{{ step }}</span>
+        </div>
+        <div
+          *ngIf="i < steps.length - 1"
+          class="hidden md:block h-1 bg-gray-200 absolute top-4 left-0"
+          [ngClass]="{'bg-blue-600': currentStep > i}"
+        ></div>
+      </div>
+    </div>
+
+    <!-- Step 1: Select Appointment Type -->
+    <div *ngIf="currentStep === 0" class="space-y-4">
+      <div>
+        <label class="block text-gray-700 mb-2">Appointment Type</label>
+        <select formControlName="appointmentType" class="w-full p-3 border border-gray-300 rounded">
+          <option value="" disabled>Select appointment type</option>
+          <option *ngFor="let type of appointmentTypesArray" [value]="type.type">{{type.type}}</option>
+        </select>
+        <div *ngIf="showError('appointmentType')" class="text-red-500 text-sm mt-1">
+          Please select an appointment type
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-gray-700 mb-2">Department</label>
+        <select formControlName="department" class="w-full p-3 border border-gray-300 rounded">
+          <option value="" disabled>Select department</option>
+          <option value="general-medicine">General Medicine</option>
+          <option value="cardiology">Cardiology</option>
+          <option value="dermatology">Dermatology</option>
+          <option value="orthopedics">Orthopedics</option>
+          <option value="pediatrics">Pediatrics</option>
+          <option value="neurology">Neurology</option>
+        </select>
+        <div *ngIf="showError('department')" class="text-red-500 text-sm mt-1">
+          Please select a department
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-gray-700 mb-2">Reason for Visit</label>
+        <textarea
+          formControlName="reason"
+          rows="3"
+          class="w-full p-3 border border-gray-300 rounded resize-none"
+          placeholder="Please describe your symptoms or reason for appointment"
+        ></textarea>
+        <div *ngIf="showError('reason')" class="text-red-500 text-sm mt-1">
+          Please provide a reason for your visit
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 2: Select Doctor -->
+    <div *ngIf="currentStep === 1" class="space-y-4">
+      <label class="block text-gray-700 mb-4">Select a Doctor</label>
+
+      <div class="grid grid-cols-1 gap-4">
+        <div
+          *ngFor="let doctor of availableDoctors"
+          class="border rounded-lg p-4 cursor-pointer"
+          [ngClass]="{'border-blue-500 bg-blue-50': appointmentForm.get('doctorId')?.value === doctor.id, 'border-gray-200 hover:border-blue-300': appointmentForm.get('doctorId')?.value !== doctor.id}"
+          (click)="selectDoctor(doctor.id)"
+        >
+          <div class="flex items-center">
+            <img [src]="doctor.imageUrl || 'assets/images/doctor-placeholder.jpg'" class="w-16 h-16 rounded-full mr-4" alt="Doctor">
+            <div>
+              <h3 class="font-bold text-lg">{{ doctor.name }}</h3>
+              <p class="text-gray-600">{{ doctor.specialization }}</p>
+              <div class="flex items-center mt-1">
+                <div class="flex text-yellow-400">
+                  <svg *ngFor="let star of [1,2,3,4,5]" class="w-4 h-4" [ngClass]="{'text-yellow-400': star <= doctor.rating, 'text-gray-300': star > doctor.rating}" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"></path>
+                  </svg>
+                </div>
+                <span class="text-gray-600 text-sm ml-1">{{ doctor.rating }} ({{ doctor.reviewCount }} reviews)</span>
+              </div>
+            </div>
+          </div>
+          <div class="mt-4">
+            <p class="text-sm text-gray-500">Next available: {{ doctor.nextAvailable }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="showError('doctorId')" class="text-red-500 text-sm mt-1">
+        Please select a doctor
+      </div>
+    </div>
+
+    <!-- Step 3: Select Date & Time -->
+    <div *ngIf="currentStep === 2" class="space-y-4">
+      <div>
+        <label class="block text-gray-700 mb-2">Select Date</label>
+        <div class="grid grid-cols-7 gap-1 mb-4">
+          <!-- Day labels -->
+          <div *ngFor="let day of ['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa']" class="text-center text-sm font-medium py-2">
+            {{ day }}
+          </div>
+
+          <!-- Calendar days -->
+          <div
+            *ngFor="let day of calendarDays"
+            class="aspect-square flex items-center justify-center rounded-full cursor-pointer text-sm"
+            [ngClass]="{
+              'bg-gray-100 text-gray-400': !day.available,
+              'hover:bg-blue-100 text-gray-700': day.available && appointmentForm.get('date')?.value !== day.date,
+              'bg-blue-500 text-white': appointmentForm.get('date')?.value === day.date
+            }"
+            [ngStyle]="{'pointer-events': day.available ? 'auto' : 'none'}"
+            (click)="selectDate(day.date)"
+          >
+            {{ day.dayNumber }}
+          </div>
+        </div>
+
+        <div *ngIf="showError('date')" class="text-red-500 text-sm mt-1">
+          Please select a date
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-gray-700 mb-2">Select Time</label>
+        <div class="grid grid-cols-3 sm:grid-cols-4 gap-2">
+          <button
+            *ngFor="let slot of availableTimeSlots"
+            type="button"
+            class="border rounded-lg py-2 px-3 text-center"
+            [ngClass]="{
+              'bg-blue-500 text-white border-blue-500': appointmentForm.get('time')?.value === slot,
+              'hover:border-blue-400 border-gray-200': appointmentForm.get('time')?.value !== slot
+            }"
+            (click)="selectTime(slot)"
+          >
+            {{ slot }}
+          </button>
+        </div>
+
+        <div *ngIf="showError('time')" class="text-red-500 text-sm mt-1">
+          Please select a time
+        </div>
+      </div>
+    </div>
+
+    <!-- Step 4: Confirmation -->
+    <div *ngIf="currentStep === 3" class="space-y-6">
+      <h3 class="font-bold text-lg text-center">Appointment Summary</h3>
+
+      <div class="bg-blue-50 rounded-lg p-6">
+        <div class="space-y-4">
+          <div class="flex justify-between">
+            <span class="text-gray-600">Department:</span>
+            <span class="font-medium">{{ getDepartmentName(appointmentForm.get('department')?.value) }}</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="text-gray-600">Appointment Type:</span>
+            <span class="font-medium">{{ getAppointmentTypeName(appointmentForm.get('appointmentType')?.value) }}</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="text-gray-600">Doctor:</span>
+            <span class="font-medium">{{ getSelectedDoctorName() }}</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="text-gray-600">Date:</span>
+            <span class="font-medium">{{ formatDate(appointmentForm.get('date')?.value) }}</span>
+          </div>
+
+          <div class="flex justify-between">
+            <span class="text-gray-600">Time:</span>
+            <span class="font-medium">{{ appointmentForm.get('time')?.value }}</span>
+          </div>
+
+          <div>
+            <span class="text-gray-600">Reason for Visit:</span>
+            <p class="mt-1 font-medium">{{ appointmentForm.get('reason')?.value }}</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex items-center">
+        <input type="checkbox" formControlName="confirmTerms" id="terms" class="mr-2">
+        <label for="terms" class="text-sm text-gray-600">
+          I confirm that the information provided is correct and agree to the appointment scheduling terms.
+        </label>
+      </div>
+
+      <div *ngIf="showError('confirmTerms')" class="text-red-500 text-sm mt-1">
+        You must confirm the terms to continue
+      </div>
+    </div>
+
+    <!-- Navigation Buttons -->
+    <div class="flex justify-between mt-6">
+      <button
+        *ngIf="currentStep > 0"
+        type="button"
+        (click)="previousStep()"
+        class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+      >
+        Previous
+      </button>
+
+      <div class="ml-auto">
+        <button
+          *ngIf="currentStep < steps.length - 1"
+          type="button"
+          (click)="nextStep()"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
+          Next
+        </button>
+
+        <button
+          *ngIf="currentStep === steps.length - 1"
+          type="submit"
+          class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+        >
+          Confirm Appointment
+        </button>
+      </div>
+    </div>
+  </form>
+</div>
