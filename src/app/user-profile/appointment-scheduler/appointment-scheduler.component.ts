@@ -1,7 +1,6 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
-import {AppointmentTypeStepComponent} from './appointment-type-step/appointment-type-step.component';
 import { AppointmentService} from '../../services/appointment.service';
 
 interface Doctor {
