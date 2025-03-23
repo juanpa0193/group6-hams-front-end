@@ -2,6 +2,7 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
 import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import { AppointmentService} from '../../services/appointment.service';
+import { DoctorService } from '../../services/doctor.service';
 
 interface Doctor {
   id: string;
@@ -14,6 +15,7 @@ interface Doctor {
 }
 
 interface Doctor_new {
+  userId: string;
   name: string;
   specialization: string;
   imageUrl?: string;
@@ -89,6 +91,7 @@ export class AppointmentSchedulerComponent implements OnInit {
       nextAvailable: 'Monday, Feb 19'
     }
   ];
+  availableDoctors_new: Doctor_new[] = [];
 
   calendarDays: CalendarDay[] = [];
   availableTimeSlots: string[] = [
@@ -97,7 +100,9 @@ export class AppointmentSchedulerComponent implements OnInit {
     '2:00 PM', '2:30 PM', '3:00 PM', '3:30 PM'
   ];
 
-  constructor(private formBuilder: FormBuilder, private appointmentService: AppointmentService) {
+  constructor(private formBuilder: FormBuilder,
+              private appointmentService: AppointmentService,
+              private doctorService: DoctorService) {
     this.appointmentForm = this.formBuilder.group({
       appointmentType: ['', Validators.required],
       department: ['', Validators.required],
@@ -115,6 +120,7 @@ export class AppointmentSchedulerComponent implements OnInit {
 
   ngOnInit() {
     this.getAppointmentTypes();
+    this.getAllDoctors();
   }
 
   generateCalendarDays(): void {
@@ -273,8 +279,8 @@ export class AppointmentSchedulerComponent implements OnInit {
     // FIXME
     // Uncomment after Testing
     // // Fallback static values
-    //this.setFallbackAppointmentTypes();
-
+    // this.setFallbackAppointmentTypes();
+    //
     // const types: { [key: string]: string } = {
     //   'general-checkup': 'General Checkup',
     //   'follow-up': 'Follow-up Visit',
@@ -282,8 +288,8 @@ export class AppointmentSchedulerComponent implements OnInit {
     //   'vaccination': 'Vaccination',
     //   'lab-test': 'Laboratory Test'
     // };
-    //
-    //  return this.appointmentTypes[typeCode] || typeCode;
+
+     //return this.appointmentTypes[typeCode] || typeCode;
   }
 
   getAppointmentTypes(){
@@ -301,6 +307,25 @@ export class AppointmentSchedulerComponent implements OnInit {
       error: (error) => {
         console.log('Error fetching appointment types:',error);
         // this.setFallbackAppointmentTypes();
+      }
+    })
+  }
+
+  getAllDoctors() {
+    this.doctorService.getDoctorsAll().subscribe({
+      next: (data: Doctor_new[]) => {
+        console.log('Response',data); // DEBUG
+
+        // Transform Doctor data into an array
+        this.availableDoctors_new = data.map( item => ({
+          userId: item.userId,
+          name: item.name,
+          specialization: item.specialization,
+          imageUrl: item.imageUrl,
+          rating: item.rating,
+          reviewCount: item.reviewCount,
+          nextAvailable: item.nextAvailable
+        }))
       }
     })
   }

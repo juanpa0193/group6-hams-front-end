@@ -19,19 +19,4 @@ export class AppointmentService {
     return this.http.get<any[]>(`${this.baseURL}/appointments/types`);
 
   }
-
-  // getPosts() {
-  //   this.http.get('http://localhost:8080/posts')
-  //     .subscribe({
-  //       next: (data: any) => {
-  //         console.log('Response:', data); // Add this to debug
-  //         this.posts = data; // Make sure response is an array
-  //       },
-  //       error: (error) => {
-  //         console.error('Error fetching products:', error);
-  //       }
-  //     });
-  //
-  // }
-
 }

@@ -84,10 +84,10 @@
 
       <div class="grid grid-cols-1 gap-4">
         <div
-          *ngFor="let doctor of availableDoctors"
+          *ngFor="let doctor of availableDoctors_new"
           class="border rounded-lg p-4 cursor-pointer"
-          [ngClass]="{'border-blue-500 bg-blue-50': appointmentForm.get('doctorId')?.value === doctor.id, 'border-gray-200 hover:border-blue-300': appointmentForm.get('doctorId')?.value !== doctor.id}"
-          (click)="selectDoctor(doctor.id)"
+          [ngClass]="{'border-blue-500 bg-blue-50': appointmentForm.get('doctorId')?.value === doctor.userId, 'border-gray-200 hover:border-blue-300': appointmentForm.get('doctorId')?.value !== doctor.userId}"
+          (click)="selectDoctor(doctor.userId)"
         >
           <div class="flex items-center">
             <img [src]="doctor.imageUrl || 'assets/images/doctor-placeholder.jpg'" class="w-16 h-16 rounded-full mr-4" alt="Doctor">
