@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { AppointmentSchedulerComponent} from './appointment-scheduler/appointment-scheduler.component';
 import { AppointmentService} from '../services/appointment.service';
+import {UserInfoComponent} from './user-info/user-info.component';
 import {Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'user-profile',
   imports: [
     AppointmentSchedulerComponent,
+    UserInfoComponent,
     RouterLink,
 ],
   templateUrl: './user-profile.component.html',
