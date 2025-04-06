@@ -2,13 +2,15 @@ import { Component } from '@angular/core';
 import { AppointmentSchedulerComponent} from './appointment-scheduler/appointment-scheduler.component';
 import { AppointmentService} from '../services/appointment.service';
 import {UserInfoComponent} from './user-info/user-info.component';
+import {Router, RouterLink } from '@angular/router';
 
 @Component({
   selector: 'user-profile',
   imports: [
     AppointmentSchedulerComponent,
-    UserInfoComponent
-  ],
+    UserInfoComponent,
+    RouterLink,
+],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
 })
@@ -16,7 +18,7 @@ export class UserProfileComponent {
 
   appointmentTypes: String[] = [];
 
-  constructor(private appointmentService: AppointmentService) {
+  constructor(private appointmentService: AppointmentService, private router: Router) {
   }
 
   getAppointmentType() {
