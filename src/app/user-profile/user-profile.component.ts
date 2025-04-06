@@ -1,8 +1,11 @@
 import { Component } from '@angular/core';
 import { AppointmentSchedulerComponent} from './appointment-scheduler/appointment-scheduler.component';
-import { AppointmentService} from '../services/appointment.service';
 import {UserInfoComponent} from './user-info/user-info.component';
-import {Router, RouterLink } from '@angular/router';
+import {RouterLink } from '@angular/router';
+import {AppointmentSummaryComponent} from './appointment-summary/appointment-summary.component';
+import {MedicalRecordsComponent} from './medical-records/medical-records.component';
+import {QuickActionsToolbarComponent} from './quick-actions-toolbar/quick-actions-toolbar.component';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'user-profile',
@@ -10,27 +13,24 @@ import {Router, RouterLink } from '@angular/router';
     AppointmentSchedulerComponent,
     UserInfoComponent,
     RouterLink,
-],
+    AppointmentSummaryComponent,
+    MedicalRecordsComponent,
+    QuickActionsToolbarComponent,
+    NgIf,
+  ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
 })
 export class UserProfileComponent {
 
-  appointmentTypes: String[] = [];
+  appointmentScheduldingMode = false;
 
-  constructor(private appointmentService: AppointmentService, private router: Router) {
+  constructor() {
   }
 
-  getAppointmentType() {
-    this.appointmentService.getAppointmentType().subscribe({
-      next: (data: any) => {
-        console.log('Response:', data); // DEBUG
-        this.appointmentTypes = data;
-      },
-      error: (err: any) => {
-        console.log('Error fetching products:',err);
-      }
-    })
+  handleAppointmentSchedulingMode(value: boolean): void {
+    this.appointmentScheduldingMode = value;
+    console.log('Parent value updated to:', this.appointmentScheduldingMode)
   }
 
 }
