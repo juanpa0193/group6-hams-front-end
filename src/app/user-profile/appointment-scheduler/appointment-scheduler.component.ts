@@ -4,18 +4,18 @@ import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import { AppointmentService} from '../../services/appointment.service';
 import { DoctorService } from '../../services/doctor.service';
 
+// interface Doctor {
+//   id: string;
+//   name: string;
+//   specialization: string;
+//   imageUrl?: string;
+//   rating: number;
+//   reviewCount: number;
+//   nextAvailable: string;
+// }
+
 interface Doctor {
   id: string;
-  name: string;
-  specialization: string;
-  imageUrl?: string;
-  rating: number;
-  reviewCount: number;
-  nextAvailable: string;
-}
-
-interface Doctor_new {
-  userId: string;
   name: string;
   specialization: string;
   imageUrl?: string;
@@ -49,6 +49,7 @@ interface AppointmentType {
 })
 export class AppointmentSchedulerComponent implements OnInit {
   @Output() closeScheduling = new EventEmitter<void>();
+  @Output() dismissAppointmentScheduler = new EventEmitter<boolean>();
 
   appointmentForm: FormGroup;
   currentStep = 0;
@@ -56,42 +57,44 @@ export class AppointmentSchedulerComponent implements OnInit {
   submitted = false;
   appointmentTypes: { [key: string]: string } = {};
   appointmentTypesArray: AppointmentType[] = [];
+  appointmentConfirmed = false;
 
-  availableDoctors: Doctor[] = [
-    {
-      id: 'doc1',
-      name: 'Dr. Emily Johnson',
-      specialization: 'General Medicine',
-      rating: 4.8,
-      reviewCount: 124,
-      nextAvailable: 'Tomorrow'
-    },
-    {
-      id: 'doc2',
-      name: 'Dr. Michael Chen',
-      specialization: 'Cardiology',
-      rating: 4.9,
-      reviewCount: 98,
-      nextAvailable: 'Thursday, Feb 15'
-    },
-    {
-      id: 'doc3',
-      name: 'Dr. Sarah Williams',
-      specialization: 'Dermatology',
-      rating: 4.7,
-      reviewCount: 86,
-      nextAvailable: 'Friday, Feb 16'
-    },
-    {
-      id: 'doc4',
-      name: 'Dr. Robert Garcia',
-      specialization: 'Orthopedics',
-      rating: 4.6,
-      reviewCount: 112,
-      nextAvailable: 'Monday, Feb 19'
-    }
-  ];
-  availableDoctors_new: Doctor_new[] = [];
+  // availableDoctors: Doctor[] = [
+  //   {
+  //     id: 'doc1',
+  //     name: 'Dr. Emily Johnson',
+  //     specialization: 'General Medicine',
+  //     rating: 4.8,
+  //     reviewCount: 124,
+  //     nextAvailable: 'Tomorrow'
+  //   },
+  //   {
+  //     id: 'doc2',
+  //     name: 'Dr. Michael Chen',
+  //     specialization: 'Cardiology',
+  //     rating: 4.9,
+  //     reviewCount: 98,
+  //     nextAvailable: 'Thursday, Feb 15'
+  //   },
+  //   {
+  //     id: 'doc3',
+  //     name: 'Dr. Sarah Williams',
+  //     specialization: 'Dermatology',
+  //     rating: 4.7,
+  //     reviewCount: 86,
+  //     nextAvailable: 'Friday, Feb 16'
+  //   },
+  //   {
+  //     id: 'doc4',
+  //     name: 'Dr. Robert Garcia',
+  //     specialization: 'Orthopedics',
+  //     rating: 4.6,
+  //     reviewCount: 112,
+  //     nextAvailable: 'Monday, Feb 19'
+  //   }
+  // ];
+
+  availableDoctors: Doctor[] = [];
 
   calendarDays: CalendarDay[] = [];
   availableTimeSlots: string[] = [
@@ -205,7 +208,8 @@ export class AppointmentSchedulerComponent implements OnInit {
   }
 
   submitAppointment(): void {
-    this.submitted = true;
+    this.currentStep = -1;
+    this.appointmentConfirmed = true;
 
     if (this.appointmentForm.valid) {
       console.log('Appointment form submitted:', this.appointmentForm.value);
@@ -222,13 +226,13 @@ export class AppointmentSchedulerComponent implements OnInit {
       //   });
 
       // For demo purposes, just log the values
-      alert('Appointment scheduled successfully!');
-      this.goBack();
+      // alert('Appointment scheduled successfully!');
+      // this.goBack();
     }
   }
 
   goBack(): void {
-    this.closeScheduling.emit();
+    this.dismissScheduler();
   }
 
   showError(controlName: string): boolean {
@@ -268,28 +272,10 @@ export class AppointmentSchedulerComponent implements OnInit {
     return departments[departmentCode] || departmentCode;
   }
 
-  getAppointmentTypeName(typeCode: string): string {
+  getAppointmentTypeName(): string {
 
-    if(this.appointmentTypes && this.appointmentTypes[typeCode]){
-      return this.appointmentTypes[typeCode] as string;
-    }
+    return this.appointmentForm.get('appointmentType')?.value;
 
-    return 'error';
-
-    // FIXME
-    // Uncomment after Testing
-    // // Fallback static values
-    // this.setFallbackAppointmentTypes();
-    //
-    // const types: { [key: string]: string } = {
-    //   'general-checkup': 'General Checkup',
-    //   'follow-up': 'Follow-up Visit',
-    //   'specialist': 'Specialist Consultation',
-    //   'vaccination': 'Vaccination',
-    //   'lab-test': 'Laboratory Test'
-    // };
-
-     //return this.appointmentTypes[typeCode] || typeCode;
   }
 
   getAppointmentTypes(){
@@ -313,12 +299,12 @@ export class AppointmentSchedulerComponent implements OnInit {
 
   getAllDoctors() {
     this.doctorService.getDoctorsAll().subscribe({
-      next: (data: Doctor_new[]) => {
+      next: (data: Doctor[]) => {
         console.log('Response',data); // DEBUG
 
         // Transform Doctor data into an array
-        this.availableDoctors_new = data.map( item => ({
-          userId: item.userId,
+        this.availableDoctors = data.map(item => ({
+          id: item.id.toString(),
           name: item.name,
           specialization: item.specialization,
           imageUrl: item.imageUrl,
@@ -346,4 +332,11 @@ export class AppointmentSchedulerComponent implements OnInit {
 //     }));
 // }
 
+  closeConfirmation() {
+    this.dismissScheduler();
+  }
+
+  dismissScheduler() {
+    this.dismissAppointmentScheduler.emit(false);
+  }
 }

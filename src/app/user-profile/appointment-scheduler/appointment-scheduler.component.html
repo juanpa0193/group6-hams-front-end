@@ -2,7 +2,7 @@
 <div class="bg-white rounded-lg p-6 shadow-lg">
   <div class="flex justify-between items-center mb-6">
     <h2 class="text-xl font-bold text-blue-800">Schedule an Appointment</h2>
-    <button (click)="goBack()" class="text-gray-500 hover:text-gray-700">
+    <button (click)="goBack()" class="text-blue-500 hover:text-gray-700">
       <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
       </svg>
@@ -84,10 +84,10 @@
 
       <div class="grid grid-cols-1 gap-4">
         <div
-          *ngFor="let doctor of availableDoctors_new"
+          *ngFor="let doctor of availableDoctors"
           class="border rounded-lg p-4 cursor-pointer"
-          [ngClass]="{'border-blue-500 bg-blue-50': appointmentForm.get('doctorId')?.value === doctor.userId, 'border-gray-200 hover:border-blue-300': appointmentForm.get('doctorId')?.value !== doctor.userId}"
-          (click)="selectDoctor(doctor.userId)"
+          [ngClass]="{'border-blue-500 bg-blue-50': appointmentForm.get('doctorId')?.value === doctor.id, 'border-gray-200 hover:border-blue-300': appointmentForm.get('doctorId')?.value !== doctor.id}"
+          (click)="selectDoctor(doctor.id)"
         >
           <div class="flex items-center">
             <img [src]="doctor.imageUrl || 'assets/images/doctor-placeholder.jpg'" class="w-16 h-16 rounded-full mr-4" alt="Doctor">
@@ -182,7 +182,7 @@
 
           <div class="flex justify-between">
             <span class="text-gray-600">Appointment Type:</span>
-            <span class="font-medium">{{ getAppointmentTypeName(appointmentForm.get('appointmentType')?.value) }}</span>
+            <span class="font-medium">{{ getAppointmentTypeName() }}</span>
           </div>
 
           <div class="flex justify-between">
@@ -232,7 +232,7 @@
 
       <div class="ml-auto">
         <button
-          *ngIf="currentStep < steps.length - 1"
+          *ngIf="currentStep !== -1 && currentStep < steps.length - 1"
           type="button"
           (click)="nextStep()"
           class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
@@ -246,6 +246,53 @@
           class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
         >
           Confirm Appointment
+        </button>
+      </div>
+    </div>
+
+    <!-- Success Confirmation View -->
+    <div *ngIf="appointmentConfirmed" class="bg-white rounded-lg p-6 text-center">
+      <div class="mb-6">
+        <div class="mx-auto w-20 h-20 rounded-full bg-green-100 flex items-center justify-center mb-4">
+          <svg class="w-12 h-12 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+          </svg>
+        </div>
+
+        <h2 class="text-xl font-bold text-blue-800 mb-2">Appointment Confirmed!</h2>
+        <p class="text-gray-600 mb-6">Your appointment has been successfully scheduled.</p>
+
+        <div class="bg-blue-50 rounded-lg p-6 mb-6 text-left">
+          <div class="space-y-4">
+            <div class="flex justify-between">
+              <span class="text-gray-600">Department:</span>
+              <span class="font-medium">{{ getDepartmentName(appointmentForm.get('department')?.value) }}</span>
+            </div>
+
+            <div class="flex justify-between">
+              <span class="text-gray-600">Doctor:</span>
+              <span class="font-medium">{{ getSelectedDoctorName() }}</span>
+            </div>
+
+            <div class="flex justify-between">
+              <span class="text-gray-600">Date:</span>
+              <span class="font-medium">{{ formatDate(appointmentForm.get('date')?.value) }}</span>
+            </div>
+
+            <div class="flex justify-between">
+              <span class="text-gray-600">Time:</span>
+              <span class="font-medium">{{ appointmentForm.get('time')?.value }}</span>
+            </div>
+          </div>
+        </div>
+
+        <p class="text-gray-600 mb-6">A confirmation email has been sent to your registered email address.</p>
+
+        <button
+          (click)="closeConfirmation()"
+          class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Close
         </button>
       </div>
     </div>

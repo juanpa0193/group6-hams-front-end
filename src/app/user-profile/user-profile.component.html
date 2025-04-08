@@ -22,12 +22,22 @@
     </div>
     <nav>
       <ul class="flex space-x-6">
-        <li><a href="/dashboard" class="text-white hover:text-blue-200">Dashboard</a></li>
-        <li><a href="/appointments" class="text-white hover:text-blue-200">Appointments</a></li>
-        <li><a href="/records" class="text-white hover:text-blue-200">Medical Records</a></li>
-        <li><a href="/messages" class="text-white hover:text-blue-200">Messages</a></li>
+<!--        <li><a href="/dashboard" class="text-white hover:text-blue-200">Dashboard</a></li>-->
+<!--        <li><a href="/appointments" class="text-white hover:text-blue-200">Appointments</a></li>-->
+<!--        <li><a href="/records" class="text-white hover:text-blue-200">Medical Records</a></li>-->
+<!--        <li><a href="/messages" class="text-white hover:text-blue-200">Messages</a></li>-->
         <li>
-          <button type="button" class="text-white hover:text-blue-200" [routerLink]="['/home']">Logout</button>
+<!--          <button type="button" class="text-white hover:text-blue-200" [routerLink]="['/home']">Logout</button>-->
+          <button
+            type="button"
+            class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition-colors duration-200 flex items-center gap-2"
+            [routerLink]="['/home']"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            Logout
+          </button>
         </li>
       </ul>
     </nav>
@@ -42,116 +52,17 @@
       </div>
 
       <!-- Right Column - Medical Information & Appointments -->
-      <appointment-scheduler class="z-10"/>
-<!--      <div class="md:w-2/3">-->
-<!--        &lt;!&ndash; Upcoming Appointments &ndash;&gt;-->
-<!--        <div class="bg-white rounded-lg p-6 shadow-lg mb-6">-->
-<!--          <h2 class="text-xl font-bold mb-4 text-blue-800">Upcoming Appointments</h2>-->
+      <appointment-scheduler *ngIf="appointmentScheduldingMode" (dismissAppointmentScheduler)=handleAppointmentSchedulingMode($event) class="z-10"/>
+      <div *ngIf="!appointmentScheduldingMode" class="md:w-2/3">
+        <!-- Upcoming Appointments -->
+        <appointment-summary />
 
-<!--          <div class="space-y-4">-->
-<!--            <div class="border-l-4 border-blue-500 pl-4 py-2">-->
-<!--              <div class="flex justify-between">-->
-<!--                <div>-->
-<!--                  <p class="font-bold">Dr. Emily Johnson</p>-->
-<!--                  <p class="text-gray-600">General Checkup</p>-->
-<!--                </div>-->
-<!--                <div class="text-right">-->
-<!--                  <p class="font-bold">Feb 25, 2025</p>-->
-<!--                  <p class="text-gray-600">10:30 AM</p>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
+        <!-- Recent Medical Records -->
+<!--        <medical-records />-->
 
-<!--            <div class="border-l-4 border-blue-500 pl-4 py-2">-->
-<!--              <div class="flex justify-between">-->
-<!--                <div>-->
-<!--                  <p class="font-bold">Dr. Robert Chen</p>-->
-<!--                  <p class="text-gray-600">Dental Cleaning</p>-->
-<!--                </div>-->
-<!--                <div class="text-right">-->
-<!--                  <p class="font-bold">Mar 10, 2025</p>-->
-<!--                  <p class="text-gray-600">2:15 PM</p>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
-
-<!--          <button class="mt-4 text-blue-600 hover:text-blue-800 flex items-center">-->
-<!--            <span>View all appointments</span>-->
-<!--            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>-->
-<!--            </svg>-->
-<!--          </button>-->
-<!--        </div>-->
-
-<!--        -->
-<!--        -->
-<!--        -->
-<!--        &lt;!&ndash; Recent Medical Records &ndash;&gt;-->
-<!--&lt;!&ndash;        <div class="bg-white rounded-lg p-6 shadow-lg mb-6">&ndash;&gt;-->
-<!--&lt;!&ndash;          <h2 class="text-xl font-bold mb-4 text-blue-800">Recent Medical Records</h2>&ndash;&gt;-->
-
-<!--&lt;!&ndash;          <div class="space-y-4">&ndash;&gt;-->
-<!--&lt;!&ndash;            <div class="border-l-4 border-green-500 pl-4 py-2">&ndash;&gt;-->
-<!--&lt;!&ndash;              <div class="flex justify-between">&ndash;&gt;-->
-<!--&lt;!&ndash;                <div>&ndash;&gt;-->
-<!--&lt;!&ndash;                  <p class="font-bold">Blood Test Results</p>&ndash;&gt;-->
-<!--&lt;!&ndash;                  <p class="text-gray-600">Dr. Emily Johnson</p>&ndash;&gt;-->
-<!--&lt;!&ndash;                </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                <div class="text-right">&ndash;&gt;-->
-<!--&lt;!&ndash;                  <p class="text-gray-600">Jan 15, 2025</p>&ndash;&gt;-->
-<!--&lt;!&ndash;                  <button class="text-blue-600 hover:text-blue-800">View</button>&ndash;&gt;-->
-<!--&lt;!&ndash;                </div>&ndash;&gt;-->
-<!--&lt;!&ndash;              </div>&ndash;&gt;-->
-<!--&lt;!&ndash;            </div>&ndash;&gt;-->
-
-<!--&lt;!&ndash;            <div class="border-l-4 border-green-500 pl-4 py-2">&ndash;&gt;-->
-<!--&lt;!&ndash;              <div class="flex justify-between">&ndash;&gt;-->
-<!--&lt;!&ndash;                <div>&ndash;&gt;-->
-<!--&lt;!&ndash;                  <p class="font-bold">X-Ray Results</p>&ndash;&gt;-->
-<!--&lt;!&ndash;                  <p class="text-gray-600">Dr. Michael Wong</p>&ndash;&gt;-->
-<!--&lt;!&ndash;                </div>&ndash;&gt;-->
-<!--&lt;!&ndash;                <div class="text-right">&ndash;&gt;-->
-<!--&lt;!&ndash;                  <p class="text-gray-600">Dec 5, 2024</p>&ndash;&gt;-->
-<!--&lt;!&ndash;                  <button class="text-blue-600 hover:text-blue-800">View</button>&ndash;&gt;-->
-<!--&lt;!&ndash;                </div>&ndash;&gt;-->
-<!--&lt;!&ndash;              </div>&ndash;&gt;-->
-<!--&lt;!&ndash;            </div>&ndash;&gt;-->
-<!--&lt;!&ndash;          </div>&ndash;&gt;-->
-
-<!--&lt;!&ndash;          <button class="mt-4 text-blue-600 hover:text-blue-800 flex items-center">&ndash;&gt;-->
-<!--&lt;!&ndash;            <span>View all records</span>&ndash;&gt;-->
-<!--&lt;!&ndash;            <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">&ndash;&gt;-->
-<!--&lt;!&ndash;              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>&ndash;&gt;-->
-<!--&lt;!&ndash;            </svg>&ndash;&gt;-->
-<!--&lt;!&ndash;          </button>&ndash;&gt;-->
-<!--&lt;!&ndash;        </div>&ndash;&gt;-->
-
-<!--        &lt;!&ndash; Quick Actions &ndash;&gt;-->
-<!--        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">-->
-<!--          <button class="bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-lg shadow flex flex-col items-center justify-center">-->
-<!--            <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">-->
-<!--              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path>-->
-<!--            </svg>-->
-<!--            <span>Schedule Appointment</span>-->
-<!--          </button>-->
-
-<!--&lt;!&ndash;          <button class="bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-lg shadow flex flex-col items-center justify-center">&ndash;&gt;-->
-<!--&lt;!&ndash;            <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">&ndash;&gt;-->
-<!--&lt;!&ndash;              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>&ndash;&gt;-->
-<!--&lt;!&ndash;            </svg>&ndash;&gt;-->
-<!--&lt;!&ndash;            <span>Message Doctor</span>&ndash;&gt;-->
-<!--&lt;!&ndash;          </button>&ndash;&gt;-->
-
-<!--&lt;!&ndash;          <button class="bg-blue-100 hover:bg-blue-200 text-blue-800 p-4 rounded-lg shadow flex flex-col items-center justify-center">&ndash;&gt;-->
-<!--&lt;!&ndash;            <svg class="w-10 h-10 mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">&ndash;&gt;-->
-<!--&lt;!&ndash;              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path>&ndash;&gt;-->
-<!--&lt;!&ndash;            </svg>&ndash;&gt;-->
-<!--&lt;!&ndash;            <span>Prescription Refill</span>&ndash;&gt;-->
-<!--&lt;!&ndash;          </button>&ndash;&gt;-->
-<!--        </div>-->
-<!--      </div>-->
-
+        <!-- Quick Actions -->
+        <quick-actions-toolbar (scheduleAppointmentMode)=handleAppointmentSchedulingMode($event) />
+      </div>
 
     </div>
   </main>
