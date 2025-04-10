@@ -3,16 +3,9 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import { AppointmentService} from '../../services/appointment.service';
 import { DoctorService } from '../../services/doctor.service';
-
-// interface Doctor {
-//   id: string;
-//   name: string;
-//   specialization: string;
-//   imageUrl?: string;
-//   rating: number;
-//   reviewCount: number;
-//   nextAvailable: string;
-// }
+import {AppointmentModel} from '../models/appointment.model';
+import { UserModel } from '../models/user.model';
+import {AuthService} from '../../services/auth.service';
 
 interface Doctor {
   id: string;
@@ -48,6 +41,8 @@ interface AppointmentType {
   styleUrl: './appointment-scheduler.component.css'
 })
 export class AppointmentSchedulerComponent implements OnInit {
+  currentUser: UserModel | null = null;
+
   @Output() closeScheduling = new EventEmitter<void>();
   @Output() dismissAppointmentScheduler = new EventEmitter<boolean>();
 
@@ -59,41 +54,6 @@ export class AppointmentSchedulerComponent implements OnInit {
   appointmentTypesArray: AppointmentType[] = [];
   appointmentConfirmed = false;
 
-  // availableDoctors: Doctor[] = [
-  //   {
-  //     id: 'doc1',
-  //     name: 'Dr. Emily Johnson',
-  //     specialization: 'General Medicine',
-  //     rating: 4.8,
-  //     reviewCount: 124,
-  //     nextAvailable: 'Tomorrow'
-  //   },
-  //   {
-  //     id: 'doc2',
-  //     name: 'Dr. Michael Chen',
-  //     specialization: 'Cardiology',
-  //     rating: 4.9,
-  //     reviewCount: 98,
-  //     nextAvailable: 'Thursday, Feb 15'
-  //   },
-  //   {
-  //     id: 'doc3',
-  //     name: 'Dr. Sarah Williams',
-  //     specialization: 'Dermatology',
-  //     rating: 4.7,
-  //     reviewCount: 86,
-  //     nextAvailable: 'Friday, Feb 16'
-  //   },
-  //   {
-  //     id: 'doc4',
-  //     name: 'Dr. Robert Garcia',
-  //     specialization: 'Orthopedics',
-  //     rating: 4.6,
-  //     reviewCount: 112,
-  //     nextAvailable: 'Monday, Feb 19'
-  //   }
-  // ];
-
   availableDoctors: Doctor[] = [];
 
   calendarDays: CalendarDay[] = [];
@@ -104,6 +64,7 @@ export class AppointmentSchedulerComponent implements OnInit {
   ];
 
   constructor(private formBuilder: FormBuilder,
+              private authService: AuthService,
               private appointmentService: AppointmentService,
               private doctorService: DoctorService) {
     this.appointmentForm = this.formBuilder.group({
@@ -122,6 +83,16 @@ export class AppointmentSchedulerComponent implements OnInit {
   }
 
   ngOnInit() {
+
+    try {
+      this.authService.currentUser$.subscribe(user => {
+        this.currentUser = user;
+      })
+    } catch (error) {
+      console.log('Error retrieving user date', error);
+      this.dismissScheduler();
+    }
+
     this.getAppointmentTypes();
     this.getAllDoctors();
   }
@@ -208,26 +179,33 @@ export class AppointmentSchedulerComponent implements OnInit {
   }
 
   submitAppointment(): void {
-    this.currentStep = -1;
-    this.appointmentConfirmed = true;
 
     if (this.appointmentForm.valid) {
       console.log('Appointment form submitted:', this.appointmentForm.value);
 
-      // Here you would typically send the form data to your API
-      // this.appointmentService.scheduleAppointment(this.appointmentForm.value)
-      //   .subscribe({
-      //     next: (response) => {
-      //       // Handle success
-      //     },
-      //     error: (error) => {
-      //       // Handle error
-      //     }
-      //   });
+      const appointment: AppointmentModel = {
+        doctor_id: this.appointmentForm.value.doctorId,
+        date: this.appointmentForm.value.date,
+        time: this.appointmentForm.value.time,
+        appointmentType: this.appointmentForm.value.appointmentType,
+        department: this.appointmentForm.value.department,
+        reason: this.appointmentForm.value.reason
+      }
 
-      // For demo purposes, just log the values
-      // alert('Appointment scheduled successfully!');
-      // this.goBack();
+      this.appointmentService.postAppointment(appointment, this.currentUser!.userId).subscribe({
+        next: (response) => {
+          console.log('Appointment scheduled successfully!', response);
+          this.currentStep = -1;
+          this.appointmentConfirmed = true;
+          return;
+        },
+        error: (error) => {
+          console.error('Registration failed', error);
+          return false;
+          // Show error message
+        }
+      })
+
     }
   }
 

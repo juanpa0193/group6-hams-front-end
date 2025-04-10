@@ -10,19 +10,19 @@ export class SignupService {
 
   constructor(private http: HttpClient) { }
 
-  // Testing
-  getUsers() {
-    return this.http.get('http://localhost:8010/users')
-      .subscribe({
-        next: (data: any) => {
-          console.log('Response:', data); // Add this to debug
-          //this.products = data; // Make sure response is an array
-        },
-        error: (error) => {
-          console.error('Error fetching data:', error);
-        }
-      });
-  }
+  // // Testing
+  // getUsers() {
+  //   return this.http.get('http://localhost:8010/users')
+  //     .subscribe({
+  //       next: (data: any) => {
+  //         console.log('Response:', data); // Add this to debug
+  //         //this.products = data; // Make sure response is an array
+  //       },
+  //       error: (error) => {
+  //         console.error('Error fetching data:', error);
+  //       }
+  //     });
+  // }
 
   postUser(signupForm: SignupFormModel){
     console.log(signupForm.email);
