@@ -73,8 +73,6 @@ export class SignupFormComponent {
         }
       }); // This is important - you need to subscribe for this to work
 
-    // Navigate to login page or dashboard after successful signup
-    // this.router.navigate(['/login']);
   }
 
 

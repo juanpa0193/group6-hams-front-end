@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import {catchError, Observable, throwError} from 'rxjs';
 import { ApiConfigService } from './api-config.service';
+import {AppointmentModel} from '../user-profile/models/appointment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -18,5 +19,21 @@ export class AppointmentService {
 
     return this.http.get<any[]>(`${this.baseURL}/appointments/types`);
 
+  }
+
+  postAppointment(appointment: AppointmentModel, patientId: string){
+    return this.http.post<any>(`${this.baseURL}/appointments/scheduleAppointment/${patientId}`, {
+      doctor_id: appointment.doctor_id,
+      date: appointment.date,
+      time: appointment.time,
+      appointmentType: appointment.appointmentType,
+      department: appointment.department,
+      reason: appointment.reason
+    }).pipe(
+      catchError(error => {
+        console.log('Error creating appointment data', error);
+        return throwError(() => error);
+      })
+    );
   }
 }
