@@ -1,59 +1,116 @@
-# HealthHub
+# Healthcare Appointment Management System (HAMS)
+This is the frontend application Healthcare Appointment Management System (HAMS), developed with Angular. 
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.1.6.
+It provides patients and healthcare providers a seamless interface to schedule appointments, view medical records, and manage their profiles with modern web technology and responsive UI.
 
-## Development server
+---
 
-To start a local development server, run:
+## Table of Contents
 
-```bash
-ng serve
-```
+- [Features](#-features)
+- [Tech Stack](#-tech-stack)
+- [Installation & Build Instructions](#-installation--build-instructions)
+- [Environment Configuration](#-environment-configuration)
+- [Available Scripts](#-available-scripts)
+- [Authors & Contributors](#-Authors--&--Contributors)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## Features
+- **Secure login & registration**
+- **Appointment scheduling and summary**
+- **Access medical records**
+- **User profile management**
+- **API service abstraction with Angular DI**
+- **Fully responsive layout**
+- **Configurable API base URLs via environment.ts**
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## Tech Stack
+- Angular 17+
+- TypeScript
+- RxJS
+- Angular Router
+- SCSS/CSS
+- RESTful API Integration (via Angular Services)
+- Jasmine + Karma (for unit testing)
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## Project Structure
+Overview of important folders and components:
 
-```bash
-ng generate --help
-```
+- src/app/home	                  Landing and home page components
+- src/app/login-form	            Login UI and logic
+- src/app/signup/signup-form	    Signup interface and service integration
+- src/app/user-profile	          User dashboard including info, toolbar, and profile sections
+- src/app/appointment-scheduler	  Schedule appointments and view appointment calendar
+- src/app/appointment-summary	    Summary component for viewing past and upcoming appointments
+- src/app/medical-records	        View and manage medical documents
+- src/app/services	              API service layer (Auth, Appointments, Doctors, Signup, Config)
+- src/app/models	                Data models for Users and Appointments
+- src/app/test-files	            Misc test/demo components for development or A/B testing
+- src/environments	              Environment configurations for prod/dev\
 
-## Building
+---
 
-To build the project run:
+## Installation & Build Instructions
 
-```bash
-ng build
-```
+### Prerequisites
+- Node.js (v18+ recommended)
+- Angular CLI (v17+):
+  ```bash
+  npm install -g @angular/cli
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Installation
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/your-org/hams-frontend.git
+   cd hams-frontend
+   
+2. **Clone the repository:**
+   ```bash
+   npm install
+   
+3. **Clone the repository:**
+   ```bash
+   export const environment = {
+   production: false,
+   apiBaseUrl: 'https://your-api-url.com/api'
+   };
 
-## Running unit tests
+4. **Clone the repository:**
+   ```bash
+   ng serve
+   
+Navigate to `http://localhost:4200` in your browser.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Build for Production
+  ```bash
+  ng build --configuration=production
 
-```bash
-ng test
-```
+---
 
-## Running end-to-end tests
+## Testing
+Run unit tests with:
+  ```bash
+  ng test
+The tests are configured using Jasmine and Karma. Each component/service has its own `.spec.ts` file.
 
-For end-to-end (e2e) testing, run:
+---
 
-```bash
-ng e2e
-```
+## Deployment
+Project can be hosted on any static file server:
+- Firebase Hosting
+- Netlify
+- AWS S3 + CloudFront
+- NGINX / Apache
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+---
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+## Authors & Contributors
+- **Bosco Silva**
+- **Diego Bautista**
+- **Mark-Anthony Delva**
+- **Craig Forbes**
+- **Manuel Velasquez**
+- **Juan Villa**
