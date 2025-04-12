@@ -1,13 +1,16 @@
 import { Component } from '@angular/core';
 import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/forms';
-import { Router } from '@angular/router';
+import {Router, RouterLink} from '@angular/router';
 import { SignupService} from '../../services/signup.service';
 import {SignupFormModel} from './signup-form.model';
+import {NgIf} from '@angular/common';
 
 @Component({
   selector: 'signup-form',
   imports: [
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    RouterLink,
+    NgIf
   ],
   templateUrl: './signup-form.component.html',
   styleUrl: './signup-form.component.css'
@@ -29,7 +32,7 @@ export class SignupFormComponent {
       password: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', Validators.required],
       phoneNumber: ['', [Validators.required, Validators.pattern('^[0-9]{10}$')]],
-      terms: [false, Validators.requiredTrue],
+      isDoctor: [false],
     }, {
       validators: this.passwordMatchValidator
     });
@@ -49,14 +52,13 @@ export class SignupFormComponent {
   }
 
   onSubmit() {
-    this.submitted = true;
-
     // If form does not pass validation
     if (this.signupForm.invalid) {
       console.log('error');
       return;
     }
 
+    console.log(this.signupForm.value);
     // Signup logic
     this.signupService.postUser(this.signupForm.value as SignupFormModel)
       .subscribe({
@@ -64,14 +66,20 @@ export class SignupFormComponent {
           console.log('User registered successfully', response);
           // Reset the form
           this.signupForm.reset();
-          this.submitted = false;
-          // Optional - Implement Navigate to login or show success message
+          this.submitted = true;
+
+          // Redirect to home page after a couple seconds
+          setTimeout(() => {
+            this.router.navigate(['/home']);
+          }, 8000);
         },
         error: (error) => {
           console.error('Registration failed', error);
           // Show error message
         }
       }); // This is important - you need to subscribe for this to work
+
+
 
   }
 
