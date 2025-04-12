@@ -3,7 +3,7 @@ import {FormBuilder, FormGroup, ReactiveFormsModule, Validators} from '@angular/
 import {NgClass, NgForOf, NgIf, NgStyle} from '@angular/common';
 import { AppointmentService} from '../../services/appointment.service';
 import { DoctorService } from '../../services/doctor.service';
-import {AppointmentModel} from '../models/appointment.model';
+import {AppointmentFormModel} from '../models/appointment.model';
 import { UserModel } from '../models/user.model';
 import {AuthService} from '../../services/auth.service';
 
@@ -183,7 +183,7 @@ export class AppointmentSchedulerComponent implements OnInit {
     if (this.appointmentForm.valid) {
       console.log('Appointment form submitted:', this.appointmentForm.value);
 
-      const appointment: AppointmentModel = {
+      const appointment: AppointmentFormModel = {
         doctor_id: this.appointmentForm.value.doctorId,
         date: this.appointmentForm.value.date,
         time: this.appointmentForm.value.time,
@@ -259,8 +259,6 @@ export class AppointmentSchedulerComponent implements OnInit {
   getAppointmentTypes(){
     this.appointmentService.getAppointmentType().subscribe({
       next: (data: AppointmentType[])=> {
-        console.log('Response',data); // DEBUG
-        //this.appointmentTypes = data;
 
         // Transform appointmentTypes data into an array
         this.appointmentTypesArray = data.map( item => ({

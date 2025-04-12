@@ -6,5 +6,5 @@ export interface SignupFormModel {
   password: string;
   usertype?: string;
   phoneNumber: string;
-  terms?: boolean;
+  isDoctor?: boolean;
 }

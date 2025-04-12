@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import {catchError, Observable, throwError} from 'rxjs';
 import { ApiConfigService } from './api-config.service';
-import {AppointmentModel} from '../user-profile/models/appointment.model';
+import {AppointmentFormModel} from '../user-profile/models/appointment.model';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,11 @@ export class AppointmentService {
 
   }
 
-  postAppointment(appointment: AppointmentModel, patientId: string){
+  getUserAppointments(userId: string){
+    return this.http.get<any[]>(`${this.baseURL}/appointments/${userId}`);
+  }
+
+  postAppointment(appointment: AppointmentFormModel, patientId: string){
     return this.http.post<any>(`${this.baseURL}/appointments/scheduleAppointment/${patientId}`, {
       doctor_id: appointment.doctor_id,
       date: appointment.date,
