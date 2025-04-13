@@ -13,6 +13,7 @@ It provides patients and healthcare providers a seamless interface to schedule a
 - [Environment Configuration](#-environment-configuration)
 - [Available Scripts](#-available-scripts)
 - [Authors & Contributors](#-Authors--&--Contributors)
+- [Contact](#-Contact)
 
 ---
 
@@ -114,3 +115,17 @@ Project can be hosted on any static file server:
 - **Craig Forbes**
 - **Manuel Velasquez**
 - **Juan Villa**
+
+---
+
+## Contact
+For questions, issues, or collaboration inquiries, feel free to reach out to our team at:
+
+HealthHub API — HAMS Inc.
+Healthcare Technology Division
+1234 Brickell Plaza, Suite 900
+Miami, FL 33131, USA
+
+- Email: support@healthhub-hams.org
+- Phone: +1 (305) 555-6677
+- Website: https://www.healthhub-hams.org
