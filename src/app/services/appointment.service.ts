@@ -21,6 +21,13 @@ export class AppointmentService {
 
   }
 
+  cancelAppointment(appointmentId: string): Observable<any> {
+    console.log("Correct Appointment Id this is from service: ", appointmentId)
+    return this.http.put<any>(`${this.baseURL}/appointments/cancelAppointment`, {
+      appointmentId: appointmentId
+    });
+  }
+
   getUserAppointments(userId: string){
     return this.http.get<any[]>(`${this.baseURL}/appointments/${userId}`);
   }
