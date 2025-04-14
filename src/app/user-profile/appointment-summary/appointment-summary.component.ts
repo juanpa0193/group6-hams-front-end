@@ -17,7 +17,7 @@ import {UserService} from '../../services/user.service';
 })
 export class AppointmentSummaryComponent implements OnInit {
   currentUser: UserModel | null = null;
-  schduledAppointments: ScheduledAppointmentModel[] = [];
+  scheduledAppointments: ScheduledAppointmentModel[] = [];
 
   constructor(private authService: AuthService,
               private appointmentService: AppointmentService,
@@ -46,16 +46,24 @@ export class AppointmentSummaryComponent implements OnInit {
         switchMap((appointments: ScheduledAppointmentModel[]) => {
           if (!appointments.length) return of({ appointments: [], users: []});
 
+          // Filter out cancelled appointments
+          const filteredAppointments = appointments.filter(appointment =>
+                 appointment.status !== 'canceled'
+          )
+          console.log(filteredAppointments);
+
+          if (!filteredAppointments.length) return of({ appointments: [], users: []});
+
           // Extract user id's from the returned appointments
           const userIds = [... new Set([
-            ...appointments.map(app => app.patientId),
-            ...appointments.map(app => app.doctorId)
+            ...filteredAppointments.map(app => app.patientId),
+            ...filteredAppointments.map(app => app.doctorId)
           ])
           ];
 
           // Fetch all users in a single call (forkjoin combines multiple observables)
           return forkJoin({
-            appointments: of(appointments),
+            appointments: of(filteredAppointments),
             users: this.userService.getUserByIds(userIds)
           })
         })
@@ -65,7 +73,7 @@ export class AppointmentSummaryComponent implements OnInit {
         const { appointments, users } = data;
 
 
-        this.schduledAppointments = appointments.map( item => {
+        this.scheduledAppointments = appointments.map( item => {
           const patient = users.find( user => user.id === item.patientId);
           const doctor = users.find( users => users.id === item.doctorId);
           const patientName = patient ? `${patient.firstName} ${patient.lastName}` : 'Unknown';
@@ -73,6 +81,7 @@ export class AppointmentSummaryComponent implements OnInit {
 
           return {
             scheduledWith: this.currentUser?.userType === 'Patient' ? `Dr.${doctorName}` : patientName,
+            appointmentId: item.appointmentId,
             patientId: item.patientId,
             doctorId: item.doctorId,
             appointmentDate: this.formatDateString(item.appointmentDate),
@@ -87,6 +96,21 @@ export class AppointmentSummaryComponent implements OnInit {
         console.log('Error retrieving appointment data', error);
         }
     })
+  }
+
+  cancelAppointment(appointmentId: string): void {
+    console.log(appointmentId)
+    this.appointmentService.cancelAppointment(appointmentId)
+      .subscribe({
+        next: (response) => {
+          console.log(response);
+
+          this.getAppointments();
+        },
+        error: (error) => {
+          console.error('Error retrieving appointment data', error);
+        }
+      });
   }
 
   formatDateString(dateString: string): string {
@@ -125,5 +149,4 @@ export class AppointmentSummaryComponent implements OnInit {
     }
 
   }
-
 }

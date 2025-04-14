@@ -8,6 +8,7 @@ export interface AppointmentFormModel {
 }
 
 export interface ScheduledAppointmentModel {
+  appointmentId: string;
   scheduledWith: string;
   patientId: string;
   doctorId: string;
