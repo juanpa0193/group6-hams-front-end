@@ -1,0 +1,52 @@
+<div class="bg-white rounded-lg shadow p-6 max-w-3xl mx-auto">
+  <div class="flex justify-between items-center mb-6">
+    <h2 class="text-2xl font-bold">Patient Details</h2>
+    <button
+      class="text-gray-500 hover:text-gray-700 p-2 rounded-full hover:bg-gray-100 transition"
+      aria-label="Close"
+      (click)="closePatientQuickview()"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="border-l-4 border-blue-500 pl-4 mb-6">
+    <h3 class="text-xl font-bold">John Doe</h3>
+    <div class="flex justify-between">
+      <span>General Checkup</span>
+      <span>Apr 8, 2025 • 7:51 PM</span>
+    </div>
+  </div>
+
+  <div class="mb-6">
+    <h4 class="text-sm text-gray-500 uppercase font-medium mb-2">Patient Information</h4>
+    <div class="bg-gray-50 p-4 rounded-lg">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <p class="mb-3"><span class="font-medium">Patient ID:</span> P12345</p>
+          <p class="mb-3"><span class="font-medium">Full Name:</span> John Michael Doe</p>
+          <p class="mb-3"><span class="font-medium">Date of Birth:</span> January 15, 1985</p>
+          <p class="mb-3"><span class="font-medium">Age:</span> 40 years</p>
+          <p class="mb-3"><span class="font-medium">Gender:</span> Male</p>
+          <p class="mb-3"><span class="font-medium">Blood Type:</span> O+</p>
+        </div>
+        <div>
+          <p class="mb-3"><span class="font-medium">Email:</span> john.doe&#64;example.com</p>
+          <p class="mb-3"><span class="font-medium">Phone:</span> (555) 123-4567</p>
+          <p class="mb-3"><span class="font-medium">Address:</span> 123 Main St, Any City, ST 12345</p>
+          <p class="mb-3"><span class="font-medium">Insurance Provider:</span> Blue Cross Blue Shield</p>
+          <p class="mb-3"><span class="font-medium">Insurance ID:</span> BCBS-12345678</p>
+          <p class="mb-3"><span class="font-medium">Primary Care Physician:</span> Dr. Sarah Williams</p>
+        </div>
+      </div>
+      <div class="mt-4 border-t pt-4">
+        <p class="mb-2"><span class="font-medium">Emergency Contact:</span> Jane Doe (Spouse)</p>
+        <p class="mb-2"><span class="font-medium">Emergency Phone:</span> (555) 987-6543</p>
+        <p class="mb-3"><span class="font-medium">Allergies:</span> Penicillin, Peanuts</p>
+        <p class="mb-3"><span class="font-medium">Existing Conditions:</span> Hypertension, Mild Asthma</p>
+      </div>
+    </div>
+  </div>
+</div>

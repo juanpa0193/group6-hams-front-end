@@ -3,14 +3,20 @@ import {UserModel} from '../models/user.model';
 import {AuthService} from '../../services/auth.service';
 import {AppointmentService} from '../../services/appointment.service';
 import {ScheduledAppointmentModel} from '../models/appointment.model';
-import {NgForOf} from '@angular/common';
+import {NgForOf, NgIf, NgSwitch, NgSwitchCase, NgTemplateOutlet} from '@angular/common';
 import {forkJoin, of, switchMap} from 'rxjs';
 import {UserService} from '../../services/user.service';
+import {PatientQuickviewComponent} from '../patient-quickview/patient-quickview.component';
 
 @Component({
   selector: 'appointment-summary',
   imports: [
-    NgForOf
+    NgForOf,
+    NgSwitch,
+    NgSwitchCase,
+    NgTemplateOutlet,
+    NgIf,
+    PatientQuickviewComponent
   ],
   templateUrl: './appointment-summary.component.html',
   styleUrl: './appointment-summary.component.css'
@@ -18,6 +24,7 @@ import {UserService} from '../../services/user.service';
 export class AppointmentSummaryComponent implements OnInit {
   currentUser: UserModel | null = null;
   scheduledAppointments: ScheduledAppointmentModel[] = [];
+  patientQuickviewMode: boolean = false;
 
   constructor(private authService: AuthService,
               private appointmentService: AppointmentService,
@@ -148,5 +155,9 @@ export class AppointmentSummaryComponent implements OnInit {
       return timeString;
     }
 
+  }
+
+  handlePatientQuickviewMode(value: boolean) {
+    this.patientQuickviewMode = value;
   }
 }
