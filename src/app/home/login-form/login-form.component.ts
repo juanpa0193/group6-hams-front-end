@@ -44,13 +44,17 @@ export class LoginFormComponent {
 
     this.authService.login(email, password).subscribe({
       next: (response) => {
-        console.log('Login Success!', response)
-        this.router.navigate(['/user']);
-      }, error: (error) => {
+        console.log('Login Success!', response);
+
+        setTimeout(() => {
+          this.router.navigate(['/user']);
+        }, 500);
+      },
+        error: (error) => {
         console.error('Login Unsuccessful :(', error);
         // Show error message
-      }
-    })
+        }
+      });
     return false;
   }
 

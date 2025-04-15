@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter, Input } from '@angular/core';
 
 @Component({
   selector: 'user-info',
@@ -7,5 +7,15 @@ import { Component } from '@angular/core';
   styleUrl: './user-info.component.css'
 })
 export class UserInfoComponent {
+  @Output() edit = new EventEmitter<void>();
+  @Input() user: any;
 
+  ngOnChanges() {
+    console.log('User data received in user-info:', this.user); // Debugging log
+  }
+
+  onEdit() {
+    console.log('Edit button clicked'); // Debugging log
+    this.edit.emit();
+  }
 }
