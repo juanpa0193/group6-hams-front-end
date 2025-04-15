@@ -5,12 +5,14 @@ import {Home3Component} from './test-files/home3/home3.component';
 import {TestCompComponent} from './test-files/test-comp/test-comp.component';
 import {SignupComponent} from './signup/signup.component';
 import {UserProfileComponent} from './user-profile/user-profile.component';
+import {EditUserInfoComponent} from './user-profile/user-info/edit-user-info/edit-user-info.component';
 
 export const routes: Routes = [
   {path: '', redirectTo: 'home', pathMatch: "full"},
   {path: 'home', component: HomeComponent},
   {path: 'signup', component: SignupComponent},
   {path: 'user', component: UserProfileComponent},
+  {path: 'edit-user-info', component: EditUserInfoComponent},
   {path: 'hometest', component: HomeComponentTest},
   {path: 'home3', component: Home3Component},
   {path: 'test', component: TestCompComponent},

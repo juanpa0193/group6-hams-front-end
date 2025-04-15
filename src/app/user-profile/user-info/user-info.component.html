@@ -5,39 +5,39 @@
       alt=""
       class="w-32 h-32 rounded-full mb-4 border-4 border-white bg-neutral-100"
     >
-    <h2 class="text-xl font-bold">John Smith</h2>
-    <p class="text-gray-700">Patient ID: P12345</p>
+    <h2 class="text-xl font-bold">{{ user?.firstName }} {{ user?.lastName }}</h2>
+    <p class="text-gray-700">Patient ID: {{ user?.id }}</p>
   </div>
 
   <div class="space-y-4">
     <div>
       <h3 class="font-bold">Personal Information</h3>
       <div class="pl-4 mt-2 space-y-2">
-        <p><span class="font-medium">Date of Birth:</span> Jan 15, 1985</p>
-        <p><span class="font-medium">Gender:</span> Male</p>
-        <p><span class="font-medium">Blood Type:</span> O+</p>
+        <p><span class="font-medium">Date of Birth:</span> {{ user?.patient?.date_of_birth }}</p>
+        <p><span class="font-medium">Gender:</span> {{ user?.patient?.gender }}</p>
+        <p><span class="font-medium">Blood Type:</span> {{ user?.patient?.blood_type }}</p>
       </div>
     </div>
 
     <div>
       <h3 class="font-bold">Contact Information</h3>
       <div class="pl-4 mt-2 space-y-2">
-        <p><span class="font-medium">Email:</span> john.smith&#64;email.com</p>
-        <p><span class="font-medium">Phone:</span> (123) 456-7890</p>
-        <p><span class="font-medium">Address:</span> 123 Main St, Any City, ST 12345</p>
+        <p><span class="font-medium">Email:</span> {{ user?.email }}</p>
+        <p><span class="font-medium">Phone:</span> {{ user?.phoneNumber }}</p>
+        <p><span class="font-medium">Address:</span> {{ user?.patient?.address }}</p>
       </div>
     </div>
 
     <div>
       <h3 class="font-bold">Emergency Contact</h3>
       <div class="pl-4 mt-2 space-y-2">
-        <p><span class="font-medium">Name:</span> Jane Smith</p>
-        <p><span class="font-medium">Relation:</span> Spouse</p>
-        <p><span class="font-medium">Phone:</span> (987) 654-3210</p>
+        <p><span class="font-medium">Name:</span> {{ user?.patient?.emergency_contact_name }}</p>
+        <p><span class="font-medium">Relation:</span> {{ user?.patient?.emergency_contact_relation }}</p>
+        <p><span class="font-medium">Phone:</span> {{ user?.patient?.emergency_contact_phone }}</p>
       </div>
     </div>
 
-    <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-full mt-4 hover:bg-blue-700">
+    <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-full mt-4 hover:bg-blue-700" (click)="onEdit()">
       Edit Profile
     </button>
   </div>
