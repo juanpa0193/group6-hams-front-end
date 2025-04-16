@@ -33,4 +33,12 @@ export class UserService {
 
   }
 
+  getPatientInfo(userId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseURL}/users/patientInfo/${userId}`);
+  }
+
+  getDoctorInfo(userId: string): Observable<any> {
+    return this.http.get<any>(`${this.baseURL}/users/doctorInfo/${userId}`);
+  }
+
 }

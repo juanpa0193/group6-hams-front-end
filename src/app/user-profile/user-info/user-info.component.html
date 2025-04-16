@@ -2,43 +2,91 @@
   <div class="flex flex-col items-center mb-6">
     <img
       src="assets/images/profile-placeholder.jpg"
-      alt=""
+      alt="Profile"
       class="w-32 h-32 rounded-full mb-4 border-4 border-white bg-neutral-100"
     >
-    <h2 class="text-xl font-bold">John Smith</h2>
-    <p class="text-gray-700">Patient ID: P12345</p>
+    <h2 class="text-xl font-bold">{{ currentPatient?.firstName }} {{ currentPatient?.lastName }}</h2>
+    <p class="text-gray-700">ID: {{ currentUser?.userId }}</p>
   </div>
 
-  <div class="space-y-4">
-    <div>
-      <h3 class="font-bold">Personal Information</h3>
-      <div class="pl-4 mt-2 space-y-2">
-        <p><span class="font-medium">Date of Birth:</span> Jan 15, 1985</p>
-        <p><span class="font-medium">Gender:</span> Male</p>
-        <p><span class="font-medium">Blood Type:</span> O+</p>
-      </div>
-    </div>
-
-    <div>
-      <h3 class="font-bold">Contact Information</h3>
-      <div class="pl-4 mt-2 space-y-2">
-        <p><span class="font-medium">Email:</span> john.smith&#64;email.com</p>
-        <p><span class="font-medium">Phone:</span> (123) 456-7890</p>
-        <p><span class="font-medium">Address:</span> 123 Main St, Any City, ST 12345</p>
-      </div>
-    </div>
-
-    <div>
-      <h3 class="font-bold">Emergency Contact</h3>
-      <div class="pl-4 mt-2 space-y-2">
-        <p><span class="font-medium">Name:</span> Jane Smith</p>
-        <p><span class="font-medium">Relation:</span> Spouse</p>
-        <p><span class="font-medium">Phone:</span> (987) 654-3210</p>
-      </div>
-    </div>
-
-    <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-full mt-4 hover:bg-blue-700">
-      Edit Profile
-    </button>
+  <div [ngSwitch]="currentUser.userType" class="space-y-4">
+    <ng-container *ngSwitchCase="'Patient'">
+      <ng-container *ngTemplateOutlet="isPatient"></ng-container>
+    </ng-container>
+    <ng-container *ngSwitchCase="'Doctor'">
+      <ng-container *ngTemplateOutlet="isDoctor"></ng-container>
+    </ng-container>
   </div>
 </div>
+
+<ng-template #isPatient>
+  <div>
+    <h3 class="font-bold">Personal Information</h3>
+    <div class="pl-4 mt-2 space-y-2">
+      <p><span class="font-medium">Date of Birth:</span> {{ currentPatient?.dateOfBirth }}</p>
+      <p><span class="font-medium">Gender:</span> {{ currentPatient?.gender }}</p>
+      <p><span class="font-medium">Blood Type:</span> {{ currentPatient?.bloodType }}</p>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="font-bold">Contact Information</h3>
+    <div class="pl-4 mt-2 space-y-2">
+      <p><span class="font-medium">Email:</span> {{ currentPatient?.email }}</p>
+      <p><span class="font-medium">Phone:</span> {{ currentPatient?.phoneNumber }}</p>
+      <p><span class="font-medium">Address:</span> {{ currentPatient?.address }}</p>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="font-bold">Emergency Contact</h3>
+    <div class="pl-4 mt-2 space-y-2">
+      <p><span class="font-medium">Name:</span> {{ currentPatient?.emergencyContactName }}</p>
+      <p><span class="font-medium">Relation:</span> {{ currentPatient?.emergencyContactRelationship }}</p>
+      <p><span class="font-medium">Phone:</span> {{ currentPatient?.emergencyContactPhoneNumber }}</p>
+    </div>
+  </div>
+
+  <button class="w-full bg-blue-600 text-white py-2 px-4 rounded-full mt-4 hover:bg-blue-700">
+    Edit Profile
+  </button>
+</ng-template>
+
+<ng-template #isDoctor>
+  <div>
+    <h3 class="font-bold">Professional Information</h3>
+    <div class="pl-4 mt-2 space-y-2">
+      <p><span class="font-medium">Specialty:</span> {{ currentDoctor?.specialty }}</p>
+      <p><span class="font-medium">Department:</span> {{ currentDoctor?.department }}</p>
+      <p><span class="font-medium">License Number:</span> {{ currentDoctor?.licenseNumber}}</p>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="font-bold">Credentials</h3>
+    <div class="pl-4 mt-2 space-y-2">
+      <p><span class="font-medium">Education:</span> {{ currentDoctor?.education}}</p>
+      <p><span class="font-medium">Rating:</span> {{ currentDoctor?.rating }}</p>
+      <p><span class="font-medium">Review Count:</span> {{ currentDoctor?.reviewCount }}</p>
+    </div>
+  </div>
+
+  <div>
+    <h3 class="font-bold">Contact Information</h3>
+    <div class="pl-4 mt-2 space-y-2">
+      <p><span class="font-medium">Email:</span> {{ currentDoctor?.email }}</p>
+      <p><span class="font-medium">Phone Number:</span> {{ currentDoctor?.phoneNumber }}</p>
+    </div>
+  </div>
+
+</ng-template>
+
+
+
+
+
+
+
+
+
+

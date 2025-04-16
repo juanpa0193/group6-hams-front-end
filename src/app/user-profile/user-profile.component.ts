@@ -33,17 +33,14 @@ export class UserProfileComponent implements OnInit {
   ngOnInit() {
     // Subscribe to the currentUser Auth service observable
     this.authService.currentUser$.subscribe(user => {
-      this.currentUser = user;
 
       if(user) {
-        // Load profile
-        // ...
+        this.currentUser = user;
         this.loading = false;
-        console.log('Succesfully logged in!',user);
       } else {
         // Redirect back to login or something
         this.loading = false;
-        console.log('redirecting home');
+        console.log('No currentUser found, redirecting home...');
         this.router.navigate(['/']);
         //return false;
       }
