@@ -1,7 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { AuthService } from '../../services/auth.service';
+import {Patient} from "../models/patient.model";
+import { UserService } from '../../services/user.service';
+import {map, switchMap} from "rxjs";
+import {Doctor} from "../models/doctor.model";
 
 @Component({
   selector: 'user-info',
@@ -12,47 +15,115 @@ import { AuthService } from '../../services/auth.service';
 })
 export class UserInfoComponent implements OnInit {
   public currentUser: any = null;
+  public currentPatient: Patient | null = null;
+  public currentDoctor: Doctor | null = null;
 
-  constructor(private authService: AuthService, private http: HttpClient) {}
+  constructor(private authService: AuthService, private userService: UserService,) {}
 
   ngOnInit(): void {
     this.authService.currentUser$.subscribe(user => {
+
       if (user) {
-        const userId = user.userId;
-        const token = localStorage.getItem('token'); // assumes token is stored here
-
-        const headers = new HttpHeaders({
-          'Authorization': `Bearer ${token}`
-        });
-
-        Promise.all([
-          this.http.get(`http://localhost:8010/users/${userId}`, { headers }).toPromise(),
-          this.http.get(`http://localhost:8010/users/patientInfo/${userId}`, { headers }).toPromise()
-        ])
-        .then(([userInfo, patientInfo]: any) => {
-          this.currentUser = {
-            id: userInfo.id,
-            firstName: userInfo.firstName,
-            lastName: userInfo.lastName,
-            phoneNumber: userInfo.phoneNumber,
-            email: userInfo.email,
-            userType: userInfo.type,
-            dateOfBirth: patientInfo?.dateOfBirth ?? '',
-            bloodType: patientInfo?.bloodType ?? '',
-            gender: patientInfo?.gender ?? '',
-            address: patientInfo?.address ?? '',
-            emergencyContactName: patientInfo?.emergencyContactName ?? '',
-            emergencyContactRelation: patientInfo?.emergencyContactRelation ?? '',
-            emergencyContactPhone: patientInfo?.emergencyContactPhone ?? ''
-          };
-          console.log('Full Profile:', this.currentUser);
-        })
-        .catch(error => {
-          console.error('Error fetching user or patient info:', error);
-        });
+        this.currentUser = user;
+        switch (this.currentUser.userType) {
+          case 'Patient':
+            this.getCurrentPatientInfo();
+            break;
+          case 'Doctor':
+            this.getCurrentDoctorInfo();
+            break;
+        }
       }
+
     });
   }
+
+  getCurrentPatientInfo(){
+
+    // First get user-level data
+    this.userService.getUserById(this.currentUser.userId)
+        .pipe(
+            switchMap( userData => {
+              // Once we have user data, get patient-level data
+              return this.userService.getPatientInfo(this.currentUser.userId).pipe(
+                  // combine results
+                  map(patientData => {
+                    return {
+                      userData: userData,
+                      patientData: patientData
+                    }
+                  })
+              )
+
+            })
+        )
+        .subscribe( combinedData => {
+
+          const { userData, patientData } = combinedData;
+
+          return this.currentPatient = {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            phoneNumber: userData.phoneNumber,
+            email: userData.email,
+            dateOfBirth: patientData.dateOfBirth,
+            bloodType: patientData.bloodType,
+            gender: patientData.gender,
+            address: patientData.address,
+            emergencyContactName: patientData.emergencyContactName,
+            emergencyContactRelationship: patientData.emergencyContactRelationship,
+            emergencyContactPhoneNumber: patientData.emergencyContactPhoneNumber
+          }
+    }, error => {
+          console.error('Error fetching patient data',error);
+        })
+
+  }
+
+  getCurrentDoctorInfo(){
+
+    // First get user-level data
+    this.userService.getUserById(this.currentUser.userId)
+        .pipe(
+            switchMap( userData => {
+              // Once we have user data, get patient-level data
+              return this.userService.getDoctorInfo(this.currentUser.userId).pipe(
+                  // combine results
+                  map(doctorData => {
+                    return {
+                      userData: userData,
+                      doctorData: doctorData
+                    }
+                  })
+              )
+
+            })
+        )
+        .subscribe( combinedData => {
+
+          const { userData, doctorData } = combinedData;
+
+          return this.currentDoctor = {
+            firstName: userData.firstName,
+            lastName: userData.lastName,
+            phoneNumber: userData.phoneNumber,
+            email: userData.email,
+            specialty: doctorData.specialty,
+            department: doctorData.department,
+            licenseNumber: doctorData.licenseNumber,
+            biography: doctorData.biography,
+            education: doctorData.education,
+            imageUrl: doctorData.imageUrl,
+            rating: doctorData.rating,
+            reviewCount: doctorData.reviewCount
+          }
+        }, error => {
+          console.error('Error fetching doctor data',error);
+        })
+
+
+  }
+
 }
 
 
