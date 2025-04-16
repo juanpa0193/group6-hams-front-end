@@ -7,6 +7,7 @@ import {MedicalRecordsComponent} from './medical-records/medical-records.compone
 import {QuickActionsToolbarComponent} from './quick-actions-toolbar/quick-actions-toolbar.component';
 import {NgIf} from '@angular/common';
 import {AuthService} from '../services/auth.service';
+import {Home3Component} from '../test-files/home3/home3.component';
 
 @Component({
   selector: 'user-profile',
@@ -18,6 +19,7 @@ import {AuthService} from '../services/auth.service';
     MedicalRecordsComponent,
     QuickActionsToolbarComponent,
     NgIf,
+    Home3Component,
   ],
   templateUrl: './user-profile.component.html',
   styleUrl: './user-profile.component.css'
@@ -49,7 +51,6 @@ export class UserProfileComponent implements OnInit {
 
   handleAppointmentSchedulingMode(value: boolean): void {
     this.appointmentScheduldingMode = value;
-    console.log('Parent value updated to:', this.appointmentScheduldingMode)
   }
 
 }

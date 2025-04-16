@@ -1,29 +1,74 @@
-<!-- appointments.component.html -->
 <div class="bg-white rounded-lg p-6 shadow-lg mb-6">
   <h2 class="text-xl font-bold mb-4 text-blue-800">Upcoming Appointments</h2>
 
   <div class="space-y-4">
-    <div *ngFor="let appointment of scheduledAppointments" class="border-l-4 border-blue-500 pl-4 py-2">
-      <div class="flex justify-between items-center">
-        <div>
-          <p class="font-bold">{{ appointment.scheduledWith }}</p>
-          <p class="text-gray-600">{{ appointment.appointmentType }}</p>
-        </div>
-        <div class="text-right mr-4">
-          <p class="font-bold">{{ appointment.appointmentDate }}</p>
-          <p class="text-gray-600">{{ appointment.appointmentTime }}</p>
-        </div>
-        <button
-          (click)="cancelAppointment(appointment.appointmentId)"
-          class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded flex items-center transition-colors duration-200"
-          aria-label="Cancel appointment"
-        >
-          <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
-          </svg>
-          Cancel
-        </button>
-      </div>
+
+    <div [ngSwitch]="currentUser?.userType" *ngFor="let appointment of scheduledAppointments" class="border-l-4 border-blue-500 pl-4 py-2">
+
+      <ng-container *ngSwitchCase="'Patient'">
+          <ng-container *ngTemplateOutlet="patientAppointmentsView; context: {appointment: appointment}"></ng-container>
+        </ng-container>
+
+      <ng-container *ngSwitchCase="'Doctor'">
+        <ng-container *ngTemplateOutlet="doctorAppointmentsView; context: {appointment: appointment}"></ng-container>
+      </ng-container>
     </div>
+
   </div>
+
+  <button class="mt-4 text-blue-600 hover:text-blue-800 flex items-center">
+    <span>View all appointments</span>
+    <svg class="w-4 h-4 ml-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+    </svg>
+  </button>
 </div>
+
+
+<ng-template #patientAppointmentsView let-appointment="appointment">
+  <div class="flex justify-between">
+    <div>
+      <p class="font-bold">{{ appointment.scheduledWith}}</p>
+      <p class="text-gray-600">{{ appointment.appointmentType}}</p>
+    </div>
+    <div class="text-right">
+      <p class="font-bold">{{ appointment.appointmentDate}}</p>
+      <p class="text-gray-600">{{ appointment.appointmentTime}}</p>
+    </div>
+    <button
+      (click)="cancelAppointment(appointment.appointmentId)"
+      class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded flex items-center transition-colors duration-200"
+      aria-label="Cancel appointment"
+    >
+      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+      Cancel
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #doctorAppointmentsView let-appointment="appointment">
+  <div *ngIf="!patientQuickviewMode" class="flex justify-between p-4 border rounded-lg hover:bg-blue-50 cursor-pointer transition"
+  (click)="handlePatientQuickviewMode(true)">
+    <div>
+      <p class="font-bold">{{ appointment.scheduledWith}}</p>
+      <p class="text-gray-600">{{ appointment.appointmentType}}</p>
+    </div>
+    <div class="text-right">
+      <p class="font-bold">{{ appointment.appointmentDate}}</p>
+      <p class="text-gray-600">{{ appointment.appointmentTime}}</p>
+    </div>
+    <button
+      (click)="cancelAppointment(appointment.appointmentId)"
+      class="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded flex items-center transition-colors duration-200"
+      aria-label="Cancel appointment"
+    >
+      <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
+      </svg>
+      Cancel
+    </button>
+  </div>
+  <patient-quickview *ngIf="patientQuickviewMode" (dismissPatientQuickView)="handlePatientQuickviewMode($event)" />
+</ng-template>

@@ -43,7 +43,6 @@ interface AppointmentType {
 export class AppointmentSchedulerComponent implements OnInit {
   currentUser: UserModel | null = null;
 
-  @Output() closeScheduling = new EventEmitter<void>();
   @Output() dismissAppointmentScheduler = new EventEmitter<boolean>();
 
   appointmentForm: FormGroup;
